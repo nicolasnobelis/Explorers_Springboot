@@ -1,0 +1,24 @@
+version: '3.2'
+
+services:
+  my-couchdb:
+    image: apache/couchdb:3
+    container_name: nino_couchdb
+    # https://docs.docker.com/compose/compose-file/#volumes
+    volumes:
+      - type: volume
+        source: nino_couchdb
+        target: /opt/couchdb/data
+      - type: bind
+        source: ${PWD}/init_couchdb_sys_tables.ini
+        target: /opt/couchdb/etc/local.d/init_couchdb_sys_tables.ini
+        read_only: true
+    ports:
+      - "5984:5984" # host port / container port
+    restart: unless-stopped
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=admin
+volumes:
+  nino_couchdb:
+

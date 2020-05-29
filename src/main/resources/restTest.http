@@ -1,0 +1,17 @@
+# curl -X POST http://localhost:9090/rest/expedition/createOrUpdate --header "Content-Type: application/json" --data '{"username":"xyz","password":"xyz"}'
+POST http://localhost:9090/rest/expedition/createOrUpdate
+Content-Type: application/json
+
+{
+  "name": "Expedition to India",
+  "country": "PORTUGAL",
+  "startDate":"1497-01-01T00:00:00.000Z"
+}
+
+###
+
+# curl -X GET http://localhost:9090/
+GET http://localhost:9090/
+
+###
+

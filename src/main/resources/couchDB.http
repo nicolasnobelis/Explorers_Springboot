@@ -1,0 +1,11 @@
+# curl -i -X GET  http://127.0.0.1:5984/expeditions
+GET http://127.0.0.1:5984/expeditions
+
+###
+
+# curl -i -u admin:admin -X PUT  http://127.0.0.1:5984/expeditions
+PUT http://127.0.0.1:5984/expeditions
+Authorization: Basic admin admin
+
+###
+
