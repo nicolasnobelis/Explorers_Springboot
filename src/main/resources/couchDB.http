@@ -1,3 +1,16 @@
+# curl --header "Content-Type: application/json" --data '{"name": "Expedition to India","country": "PORTUGAL","startDate":"1497-01-01T00:00:00.000Z"}' -u admin:admin -i -X PUT  http://127.0.0.1:5984/expeditions/814f3b3e-889e-49ba-8aeb-f2ae67eb276a?rev=1-2ff0be7369aeae5ad870c22ef97327d3
+PUT http://127.0.0.1:5984/expeditions/814f3b3e-889e-49ba-8aeb-f2ae67eb276a?rev=1-2ff0be7369aeae5ad870c22ef97327d3
+Authorization: Basic admin admin
+Content-Type: application/json
+
+{
+  "name": "Expedition to India",
+  "country": "PORTUGAL",
+  "startDate": "1497-01-01T00:00:00.000Z"
+}
+
+###
+
 # curl -i -X GET  http://127.0.0.1:5984/expeditions
 GET http://127.0.0.1:5984/expeditions
 
