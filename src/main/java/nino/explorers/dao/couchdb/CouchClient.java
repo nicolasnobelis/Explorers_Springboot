@@ -28,6 +28,9 @@ public class CouchClient implements InitializingBean {
     @Value("${dbServerURL}")
     private String dbServerURL;
 
+    @Value("${dbTable}")
+    private String dbTable;
+
     private RestTemplateBuilder restTemplateBuilder;
 
     private Map<UUID, String> revisionCache = new HashMap<>();
@@ -57,9 +60,9 @@ public class CouchClient implements InitializingBean {
                         logger.warn( "Expedition table missing" );
                         createDb();
                     }
-                } ).build().getForEntity( "/expeditions", String.class );
+                } ).build().getForEntity( dbTable, String.class );
         if ( entity.getStatusCode() == HttpStatus.OK ) {
-            logger.info( "Expedition table exists" );
+            logger.info( "'{}' table exists", dbTable );
         }
         if ( entity.getStatusCode().isError() && entity.getStatusCode() != HttpStatus.NOT_FOUND ) {
             logger.error( "Unknown error in table check" );
@@ -70,8 +73,8 @@ public class CouchClient implements InitializingBean {
 
     private void createDb() {
         restTemplateBuilder.build()
-                .put( "/expeditions", null );
-        logger.info( "Expedition table created" );
+                .put( dbTable, null );
+        logger.info( "'{}' table created", dbTable );
     }
 
     public UUID putExpedition(Expedition expedition) {
@@ -80,7 +83,7 @@ public class CouchClient implements InitializingBean {
         document.setCreationDate( LocalDateTime.now() );
         document.setExpedition( expedition );
         ResponseEntity<CouchResult> response = restTemplateBuilder.build()
-                .postForEntity( "/expeditions", document, CouchResult.class );
+                .postForEntity( dbTable, document, CouchResult.class );
         if ( response.getStatusCode().isError() || response.getBody() == null ) {
             logger.error( "Unknown error in put document" );
             logger.error( response.toString() );
@@ -102,7 +105,7 @@ public class CouchClient implements InitializingBean {
             revision = document.get_rev();
         }
 
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath( "/expeditions/" )
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath( dbTable )
                 .pathSegment( expedition.getId().toString() )
                 .queryParam( "rev", revision );
         ResponseEntity<CouchResult> response = restTemplateBuilder.build()
@@ -122,7 +125,7 @@ public class CouchClient implements InitializingBean {
         if ( expedition.getId() == null ) {
             throw new NullPointerException( "Need an expedition id !" );
         }
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath( "/expeditions/" )
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath( dbTable )
                 .pathSegment( expedition.getId().toString() );
         ResponseEntity<ExpeditionDocument> response = restTemplateBuilder.build()
                 .getForEntity( uriBuilder.build().toUriString(), ExpeditionDocument.class );
